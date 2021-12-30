@@ -19,8 +19,3 @@ def login():
 
 if __name__ == "__main__":
     app.run(host = "localhost", port=6900, debug=True)
-
-#possible solution to TD ameritrade not trusting the HTTPS
-#HTTPS server has login in button 
-#when that button is clicked it redirects to HTTP server that redirects to the login with the complex url
-#then the TD ameritrade redirects to the HTTP server and the HTTP server solves the code and redirects to the HTTPS
