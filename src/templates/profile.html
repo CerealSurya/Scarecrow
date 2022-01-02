@@ -12,10 +12,20 @@
         <p>Username: {{username}}</p>
         <p>Email: {{email}}</p>
         <p>Password: {{password}}</p> 
+        <p>Refresh Token: {{refresh_token}}</p> 
+        <p>Access Token: {{access_token}}</p> 
         <!-- Make it so that you have to enter in your password first from a popup or sum before displaying password -->
 
-        <form action="#">
+        <form action="#" method="post">
             <input type="submit" name="td_btn" value ="Link account with TD-Ameritrade"/>
+        </form>
+
+        <form action="#" method="post">
+            <input type="submit" name="home_btn" value ="Back to home"/>
+        </form>
+
+        <form action="#" method="post">
+            <input type="submit" name="logout_btn" value ="Logout"/>
         </form>
 
     </body>

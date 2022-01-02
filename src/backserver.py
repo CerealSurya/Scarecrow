@@ -11,7 +11,8 @@ redirect_server = Flask(__name__)
 @redirect_server.route("/")
 def serverREDI():
     code = request.args.get("code")
-    output = mainurl + "?code=" + str(code)
+    output = f"{mainurl}?code={str(code)}"
+   # output = mainurl + "?code=" + str(code)
     return redirect(output)
 
 if __name__ == "__main__":
