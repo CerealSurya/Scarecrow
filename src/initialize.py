@@ -21,6 +21,6 @@ class users(db.Model):
         self.password = sha256_crypt.encrypt(password)
         self.refresh_token = refresh_token
 
-    def decrypt(input, db_passw):
+    def validate(input, db_passw):
         return sha256_crypt.verify(input, db_passw) #veerifying password input is = to encrypted password in db
         #returns true or false

@@ -18,7 +18,7 @@ def login():
     if request.method == 'POST': #login page
         return loginfunc()
     elif request.method == 'GET':
-        return render_template('login.html', heading="Login to Scarecrow Account", createacc_link=mainurl + "/createaccount")
+        return render_template('login.html', heading="Login to Scarecrow Account", createacc_link= f"{mainurl}/createaccount")
 
 @app.route("/createaccount/", methods=["POST", "GET"])
 def createaccount():
