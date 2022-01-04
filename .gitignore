@@ -29,6 +29,9 @@ MANIFEST
 /cert.pem
 /key.pem
 /src/users.sqlite3
+/src/data/AAPL_1_15.json
+
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.

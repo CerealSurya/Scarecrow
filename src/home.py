@@ -1,13 +1,27 @@
 from flask import Flask, redirect, url_for, render_template, request, make_response, Response
 from initialize import db, users
 import requests
-import os
+import os, io
 import json
 from dotenv import load_dotenv
-
 load_dotenv()
 callbackurl = os.environ.get("CALLBACK_URL")
 apikey = os.environ.get("API_KEY")
+
+def writeFile(info, ticker, span, interval):
+    folder_path = os.path.abspath('./data')
+    file_path = f"{ticker}_{span}_{interval}.json"
+    path_exists = os.path.exists(folder_path+file_path)
+    try:
+        if not path_exists: #Creates the user's folder used for storing .json data
+            with io.open(os.path.join(folder_path, file_path), 'w') as db_file:
+                db_file.write(json.dump(info, db_file, ensure_ascii=False, indent=4 ))
+            print(f"{ticker}.json created")
+        else:
+            with io.open(folder_path + file_path, 'w') as db_file:
+                db_file.write(json.dump(info, db_file, ensure_ascii=False, indent=4))
+    except:
+        return
 
 def refresh_auth(usr):
     parameters = {
@@ -18,27 +32,29 @@ def refresh_auth(usr):
     response = requests.post("https://api.tdameritrade.com/v1/oauth2/token", data=parameters)
     output = response.json()
     print(output)
-    return json.dumps(output)
+    return output["access_token"]
 
-def get_prices(ticker, usr):
+def get_prices(ticker, usr, span, interval):
     access = refresh_auth(usr) #Get Access Token with the Refresh token 
     #TODO: This is not optimal ^^^
     ticker = ticker.upper()
     parameters = {
         "apikey": apikey,
         "periodType": "day",
-        "period": 1,
+        "period": span,
         "frequencyType": "minute",
-        "frequency": 15
+        "frequency": interval
     }
     header = {
-        "Authorization": access
+        "Authorization": f"Bearer {access}"
     }
-    response = requests.get( #TODO: There is problem with this api call
+    response = requests.get( 
         f"https://api.tdameritrade.com/v1/marketdata/{ticker}/pricehistory",
         headers=header,
         data=parameters)
+    #write the output into a json file in the users respective folder
     output = response.json()
+    writeFile(output, ticker, span, interval)
     print(output)
     resp = make_response(redirect('/'))
     resp.set_cookie('access_token', access) #set cookie to the login username
@@ -91,7 +107,10 @@ def startup():
         elif "profilebtn" in request.form:
             return redirect(url_for('profilefunc', username=find_user.username))                   #(f"/profile/{find_user.username}")
         elif "get_prices" in request.form:
-            return get_prices("aapl", find_user)
+            ticker = request.form["ticker"]
+            span = 1
+            interval = 15
+            return get_prices(ticker, find_user, span, interval)
         else:
             return "<h1>Error</h1>"
     elif request.method == 'GET':

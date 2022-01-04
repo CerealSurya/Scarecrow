@@ -7,6 +7,10 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
+        <script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.1/dist/chart.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+        <script src="chartjs-finnancial.js"></script>
         <h1>Scarecrow</h1>
         <h2>Account</h2>
         <p>Username: {{username}}</p>
@@ -21,7 +25,9 @@
         </form>
 
         <form action="#" method="post">
+            <input type="text" name="ticker" placeholder ="Enter Ticker"/>
             <input type="submit" name="get_prices" value ="Get prices"/>
         </form>
+        <script src="render_chart.js"></script>
     </body>
 </html>
