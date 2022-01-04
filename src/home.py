@@ -1,64 +1,13 @@
 from flask import Flask, redirect, url_for, render_template, request, make_response, Response
 from initialize import db, users
 import requests
-import os, io
-import json
+import os
+from getdata import get_prices
 from dotenv import load_dotenv
 load_dotenv()
 callbackurl = os.environ.get("CALLBACK_URL")
 apikey = os.environ.get("API_KEY")
 
-def writeFile(info, ticker, span, interval):
-    folder_path = os.path.abspath('./data')
-    file_path = f"{ticker}_{span}_{interval}.json"
-    path_exists = os.path.exists(folder_path+file_path)
-    try:
-        if not path_exists: #Creates the user's folder used for storing .json data
-            with io.open(os.path.join(folder_path, file_path), 'w') as db_file:
-                db_file.write(json.dump(info, db_file, ensure_ascii=False, indent=4 ))
-            print(f"{ticker}.json created")
-        else:
-            with io.open(folder_path + file_path, 'w') as db_file:
-                db_file.write(json.dump(info, db_file, ensure_ascii=False, indent=4))
-    except:
-        return
-
-def refresh_auth(usr):
-    parameters = {
-        "grant_type": "refresh_token",
-        "refresh_token": usr.refresh_token,
-        "client_id": apikey,
-    }
-    response = requests.post("https://api.tdameritrade.com/v1/oauth2/token", data=parameters)
-    output = response.json()
-    print(output)
-    return output["access_token"]
-
-def get_prices(ticker, usr, span, interval):
-    access = refresh_auth(usr) #Get Access Token with the Refresh token 
-    #TODO: This is not optimal ^^^
-    ticker = ticker.upper()
-    parameters = {
-        "apikey": apikey,
-        "periodType": "day",
-        "period": span,
-        "frequencyType": "minute",
-        "frequency": interval
-    }
-    header = {
-        "Authorization": f"Bearer {access}"
-    }
-    response = requests.get( 
-        f"https://api.tdameritrade.com/v1/marketdata/{ticker}/pricehistory",
-        headers=header,
-        data=parameters)
-    #write the output into a json file in the users respective folder
-    output = response.json()
-    writeFile(output, ticker, span, interval)
-    print(output)
-    resp = make_response(redirect('/'))
-    resp.set_cookie('access_token', access) #set cookie to the login username
-    return resp
 
 def call_auth(code, user):
     parameters = {
@@ -110,7 +59,7 @@ def startup():
             ticker = request.form["ticker"]
             span = 1
             interval = 15
-            return get_prices(ticker, find_user, span, interval)
+            return get_prices(ticker, find_user, interval)
         else:
             return "<h1>Error</h1>"
     elif request.method == 'GET':

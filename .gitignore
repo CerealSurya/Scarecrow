@@ -29,7 +29,7 @@ MANIFEST
 /cert.pem
 /key.pem
 /src/users.sqlite3
-/src/data/AAPL_1_15.json
+/src/data/
 
 
 # PyInstaller
