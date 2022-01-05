@@ -7,8 +7,11 @@ from dotenv import load_dotenv
 load_dotenv()
 callbackurl = os.environ.get("CALLBACK_URL")
 apikey = os.environ.get("API_KEY")
+#TODO: Need to pass in the json file into home.html 
+# https://stackoverflow.com/questions/37259740/passing-variables-from-flask-to-javascript
 
-
+# def display_data():
+#     pass
 def call_auth(code, user):
     parameters = {
         "grant_type": "authorization_code",
