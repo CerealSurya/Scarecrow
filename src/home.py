@@ -57,8 +57,7 @@ def startup():
             return redirect(url_for('profilefunc', username=find_user.username))                   #(f"/profile/{find_user.username}")
         elif "get_prices" in request.form:
             ticker = request.form["ticker"]
-            span = 1
-            interval = 15
+            interval = 5
             return get_prices(ticker, find_user, interval)
         else:
             return "<h1>Error</h1>"
