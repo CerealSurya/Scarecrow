@@ -28,6 +28,7 @@
             <input type="text" name="ticker" placeholder ="Enter Ticker"/>
             <input type="submit" name="get_prices" value ="Get prices"/>
         </form>
-        <script src="render_chart.js"></script>
+        <script type="text/javascript" src={{json_url}}></script>
+        <script type="text/javascript" {{ url_for('static', filename='render_chart.js')}}></script>
     </body>
 </html>
